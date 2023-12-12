@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface BookRepository extends JpaRepository<BookEntity, Long> {
+public interface  BookRepository extends JpaRepository<BookEntity, Long> {
     List<BookEntity> findAll();
     Optional<BookEntity> findById(Long id);
 }

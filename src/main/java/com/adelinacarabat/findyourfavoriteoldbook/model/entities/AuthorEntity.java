@@ -18,8 +18,7 @@ public class AuthorEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "author_id", nullable = false)
-    private Long author_id;
+    private Long id;
     @NotNull
     private String firstName;
     @NotNull
@@ -30,10 +29,4 @@ public class AuthorEntity {
     @NotNull
     private Nationality nationality;
 
-    public AuthorEntity(@NotNull String firstName, @NotNull String lastName, @NotNull LocalDate birthDate, @NotNull Nationality nationality) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.birthDate = birthDate;
-        this.nationality = nationality;
-    }
 }

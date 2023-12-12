@@ -1,7 +1,6 @@
 package com.adelinacarabat.findyourfavoriteoldbook.model.entities;
 
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -20,10 +19,9 @@ public class BookEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "book_id")
-    private Long book_id;
+    private Long id;
     @NotNull
-    private String name;
+    private String title;
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id")
     private Set<AuthorEntity> authors;
@@ -34,7 +32,7 @@ public class BookEntity {
     private String publishingHouse;
     @NotNull
     private boolean hasVolumes;
+    @NotNull
     private int volumes;
-
 
 }

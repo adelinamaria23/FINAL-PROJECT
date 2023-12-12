@@ -6,12 +6,14 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
 @Data
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
 public class UserDTO {
 
     @Schema(description = "User first name")
@@ -26,12 +28,12 @@ public class UserDTO {
     @Schema(description = "The birth date of the user.")
     @NotNull
     private LocalDate birthDate;
-    @Schema(description = "")
+    @Schema(description = "The birthday of the uses.")
     @NotNull
     private String email;
-    @Schema(description = "")
+    @Schema(description = "The email of the user")
     private String phoneNumber;
-    @Schema(description = "")
+    @Schema(description = "The address of the user")
     @NotNull
     private String address;
 

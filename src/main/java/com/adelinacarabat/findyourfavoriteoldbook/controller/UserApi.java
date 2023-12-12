@@ -1,10 +1,10 @@
 package com.adelinacarabat.findyourfavoriteoldbook.controller;
 
 import com.adelinacarabat.findyourfavoriteoldbook.model.DTOs.CustomResponseDTO;
+import com.adelinacarabat.findyourfavoriteoldbook.model.DTOs.user.UpdateUserDTO;
 import com.adelinacarabat.findyourfavoriteoldbook.model.DTOs.user.UserDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -50,7 +50,7 @@ public interface UserApi {
             }
     )
     @GetMapping("/{id}")
-    ResponseEntity<CustomResponseDTO> getUserById(@PathVariable @Valid Long id);
+    ResponseEntity<CustomResponseDTO> getUserById(@PathVariable Long id);
 
 
     @Operation(
@@ -70,9 +70,14 @@ public interface UserApi {
     ResponseEntity<List<UserDTO>> getAllUsers();
 
     @GetMapping("/specificUsers/{fullName}/{address}/{age}")
-    public ResponseEntity<List<UserDTO>> getUsers
+    ResponseEntity<List<UserDTO>> getUsers
             (@PathVariable String fullName, @PathVariable String address, @PathVariable int age);
 
+    @PutMapping("/updateUserAddress")
+    ResponseEntity<CustomResponseDTO> updateUser(
+            @RequestBody UpdateUserDTO updateUserDTO);
 
+/*   @DeleteMapping
+    public ResponseEntity<CustomResponseDTO> deleteUserRequest(@RequestBody UpdateUserDTO userDTO);*/
 
 }

@@ -2,12 +2,13 @@ package com.adelinacarabat.findyourfavoriteoldbook.service;
 
 import com.adelinacarabat.findyourfavoriteoldbook.exception.DuplicateEmailException;
 import com.adelinacarabat.findyourfavoriteoldbook.exception.UserCreationException;
-import com.adelinacarabat.findyourfavoriteoldbook.exception.UserException;
 import com.adelinacarabat.findyourfavoriteoldbook.exception.UserNotFoundException;
+import com.adelinacarabat.findyourfavoriteoldbook.model.DTOs.user.UpdateUserDTO;
 import com.adelinacarabat.findyourfavoriteoldbook.model.DTOs.user.UserDTO;
 import com.adelinacarabat.findyourfavoriteoldbook.model.entities.UserEntity;
 import com.adelinacarabat.findyourfavoriteoldbook.repository.UserRepository;
 import com.adelinacarabat.findyourfavoriteoldbook.service.mappers.UserMapper;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -33,7 +35,6 @@ public class UserService {
     }
 
     public UserDTO createUser(UserDTO userDTO) {
-        int age = calculateAge(userDTO.getBirthDate());
         boolean userAlreadyExists = existsByEmail(userDTO.getEmail());
         if (userAlreadyExists) {
             throw new UserCreationException("Email already in use");
@@ -68,16 +69,6 @@ public class UserService {
 
     }
 
-
-    private void handleDataIntegrityViolation(DataIntegrityViolationException ex) {
-        if (isDuplicateEmailViolation(ex)) {
-            throw new DuplicateEmailException("Email already exists.");
-        }
-        throw ex;
-
-
-    }
-
     private boolean isDuplicateEmailViolation(DataIntegrityViolationException ex) {
         return ex.getMessage().contains("duplicate key value violates unique constraint");
     }
@@ -109,4 +100,34 @@ public class UserService {
         }
     return users;
     }
+
+    @Transactional
+    public UserDTO updateUserAddress(UpdateUserDTO updateUserDTO) {
+        UserEntity userEntity = findUserEntity(updateUserDTO).get();
+        userEntity.setAddress(updateUserDTO.getAddress());
+        userRepository.save(userEntity);
+
+        return userMapper.mapUserEntityToResponseUserDTO(userEntity);
+    }
+
+    @Transactional
+    private Optional<UserEntity> findUserEntity(UpdateUserDTO updateUserDTO) {
+        List<UserEntity> userEntity = userRepository.findAll();
+
+        for(UserEntity user : userEntity) {
+            if (user.getFirstName().equalsIgnoreCase(updateUserDTO.getFirstName())
+            && user.getLastName().equalsIgnoreCase(updateUserDTO.getLastName())) {
+                return Optional.of(user);
+            }
+        }
+        return Optional.of(new UserEntity());
+    }
+
+    /*@Transactional
+    public boolean deleteUserByFullName(UpdateUserDTO updateUserDTO) {
+        UserEntity userEntity = findUserEntity(updateUserDTO).get();
+        userRepository.deleteUserByFullName(userEntity);
+        Optional<UserEntity> deletedEntity = findUserEntity(updateUserDTO);
+        return deletedEntity.isPresent();
+    }*/
 }
